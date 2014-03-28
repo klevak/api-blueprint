@@ -1,483 +1,740 @@
 FORMAT: 1A
-HOST: http://api.llbean.com
+HOST: https://api.llbean.com
 
-# ODS Event Search Resource
+# ODS Events API
 
-### API Status
-|                      |               |
-|  :------             |  :------      
-| __Status__           | v1 Live  | 
-| __Related Targets__  | LLBean Public Events Reservation System (PERS) | 
-| __Description__      | ODS Events API | 
-| __Product__          | Gateway | 
-| __Known Issues__     | None | 
-| __Monitoring__       | See LLBEAN ODS Events Monitoring | 
-| __Key and Secret__   | Key Required | 
+## Summary
+The ODS API is designed to present the L.L.Bean Outdoor Discovery School 
+activities, events and reservations.
+
+### Example
+The following example will illustrate how to obtain an ODS Event using curl 
+commands. The purpose of this example is to provide working code for 
+accomplishing the requirements of your app.
+
+This guide presents a step by step process to help you gain immediate access 
+to the ODS Events API so you may look around right away. Please do take copious 
+notes of these commands as it's best to have a firm understanding of the most 
+basic requests.
+
+The following example makes a fictitious request using the consumer app key.
+
+~~~
+curl  https://api.llbean.com/v1/events/83669  -H "key: YWFiYmNjZGRlZTEyMzQ1OjIyMjMzNDQ1NQ
+~~~
+
+> But I'm getting a "HTTP/1.1 401 API is secure. Needs security Credentials" error!
+
+If you've already asked yourself this question, or have seen one of these 
+errors; you may have moved too fast. Please review the developer channel 
+Getting Started Guide here.
+
+If you have difficulties with any of these please email the API management 
+team api@llbean.com or start a conversation in the forum.
+
+The following example provides the most basic Events API response payload.
+
+~~~
+Example response goes here
+~~~
+
+Congratulations! You're Done!
+
+> Are you serious? Is that all? Okay, you must be kidding me?
+
+There's a lot more. However, before digging in much deeper it is important 
+to note that the L.L.Bean Public Event represents a very complex data model. With 
+this understanding, and to aid in the usability of the API, our team focuses 
+on the minimum viable product you, the developer, may require to build your fantastic app.
+
+## Entity Expansion 
+
+Remove this section of entity expansion does not apply for this API
+
+Many of the L.L.Bean APIs support what we like to call entity expansion 
+or "expands parameters". These querystring parameters allow the app developer 
+to choose what portions of the entity are appropriate for the use case.
+
+In addition, these options allow our API product owners to decide which 
+entities make sense to allow developers to access.
 
 
-### Service Software Level Agreement (SLA)
-| Max Response Time (Milliseconds)  | Estimated Max Requests Per Hour  |
-|:-----  |:------ |
-| 1,500  | 24,000 |
+## Security
+First and foremost is security. On our API Platform the consumer app is a 
+trusted system that interacts with L.L.Bean digital assets via an API. The 
+L.L.Bean Events API is protected with three factors:
 
-### Resources and URIs
-####Request Headers
-Media types accepted by consumer.
- 
-| Header   |  Description         |
-| :------  | :------              |
-| Accept   | application/json     |
-| Key      | Developer App Key provided by Dev Portal. |
+### 1. Consumer Key Validation
 
-#### Response Headers
-Response header for Southbound API will be honored and set to the response of Northbound API. See list of currently supported headers LLBean Notable Response Headers
+It is important to protect L.L.Bean APIs from unauthorized access. One of 
+the primary ways we do this is by validating your API consumer application key.
 
-| Name   |  Description   |  Example  |
-| :------ | :------ | :------  |
-| Content-Type | The MIME type of the body of the request. | application/json  |
-| X-LLBean-Spike-Arrest-Allowed-Count | Allowed spike arrest count set by traffic management policies | 3 |
-| X-LLBean-Quota-Allowed-Count | Allowed quota count set by traffic management policies | 300 |
+All developer apps must be approved by an L.L.Bean API administrator and 
+will be provided a consumer key and secret. It is of utmost importance 
+that you, the app developer, treat these credentials with special care.
 
-### Traffic Management
-All traffic to L.L.Bean Events by ID Resource is to be tracked by retrieving App Key from all requests made by all Consumer Apps.
+When making requests to L.L.Bean Events API you will be required to provide your Consumer key.
 
-#### Spike Arrest Management
-SpikeArrests stop traffic spikes (or bursts) that can be caused by an increase in usage, buggy clients, or malicious attacks.
+> Your consumer app key is unique for your app and should be kept in a secure location.
 
-| Policy  | Number of request |  Units  |
-| :------  | :------  | :------ |
-| API Product Level (default) | 10 | Per second  |
-| App Level | CUSTOM_VALUE (10) | Per second |
+* Do NOT store consumer keys in your source management system.
+* Do NOT reference your key in your application documents.
+* Do NOT allow your key to be exposed in .bash_history files.
+* Do NOT post your key on the developers forum or when sending emails into the API Team.
+* Do NOT hard code your key inside of your app code.
 
-#### Quota Management
-A Quota is an allotment of request messages that an app is allowed to submit to an API over the course of an hour, a day, a week, or a month.
+> Because we care, periodically the L.L. Bean API team will require 
+credentials be regenerated. In the event this needs to occur the email 
+address associated with your app will be notified.
 
-| Policy  | Number of request  | Units  |
-| :------ | :------- | :------ |
-| Default | 10800 | Per hour |
-| App Level | CUSTOM_VALUE (10800) | Per hour |
+To find the authorization credentials for an existing app, follow these steps:
+1. Go to the Developer Channel http://developer.llbean.com
+2. In the top right, hover over your email address and click my apps.
+3. Select an application to view its authorization credentials.
+4. Make your API request passing your consumer key
 
-# Group Example Requests
+### 2. Transport Layer Security (TLS):
+All API service endpoints are encrypted using SSL. Strict use of HTTPS avoids 
+intercepting the API calls and authorization headers between your app and 
+the L.L.Bean API platform.
 
-## Outdoor Discovery School Event Search [/v1/events/search?locationid={locationid}&eventtypeid={eventtypeid}&eventlevelid={eventlevelid}&pricerangeid={pricerangeid}&startdate={startdate}&deptid={deptid}&startIndex={startIndex}&expand={expand}]
-The following example eepresents the event occurrence search entity.
+### 3. Application Layer Validation
+All developer apps must be approved by an L.L.Bean API administrator and 
+provided a consumer key and secret. It is of utmost importance that you, 
+the app developer, treat these credentials with special care.
+
+## Traffic Management
+
+The Events API uses a combination of low and high-traffic management 
+policies to protect your app, and L.L.Bean's back, from excessive load. All 
+API requests are subject to a default policy; however, as a customization, 
+each individual developer app can have a value set by an API management team member.
+
+### Spike Arrests
+SpikeArrests stop traffic spikes (or bursts) that can be caused by an increase 
+in usage, buggy clients, or malicious attacks.
+
+| Policy   | Number of requests (default)  | Units
+| :------  | :--------                     | :---- 
+| High Use | 15                            | Per second
+| Low Use  | 3                             | Per second
+
+### Quota Management
+A Quota is an allotment of request messages that an app is allowed to submit 
+to an API over the course of an hour, a day, a week, or a month.
+
+| Policy   | Number of requests (default)  | Units
+| :------  | :--------                     | :---- 
+| High Use | 500                           | Per hour or per Developer App
+| Low Use  | 100                           | Per hour or per Developer App
+
+
+> Okay now I'm ready for the really gory details. Let's see all those specs again in a detailed tabular format.
+The following information has been designed to provide a detailed REST API specification for the Events API.
+
+# Group ODS Events Resource
+Group description (also with *Markdown*)
+
+## Events Occurrence [/v1/events/{event_id}{?expand}]
+Represents the event occurrence entity.
 
 + Parameters
-    + locationid (optional, string, `123`) ... Filter the results by the given locations where the event is held
-    + eventtypeid (optional, string, `2474,2441`) ... Filter the results by the given event type
-    + eventlevelid (optional, string, `2475,2443`) ... Filter the results by the given event level
-    + pricerangeid (optional, string, `1,3`) ... Ids of price ranges to include
-    + startdate (optional, string, `2/26/2014`) ... Start date to look for event occurrences. Defaults to current date
-    + deptid (optional, string, `33`) ... The department id the event
-    + startIndex (optional, string, `1`) ... Start index relative to total elements
-    + expand (optional, string, `refinements`) ... Includes elements dynamically from payload
 
-### Event Search  [GET]
-+ Response 200 (application/json)
+   + event_id  (required, integer, `83670`) ...Event Ids can be found under Activities and are related to Departments e.g. Snowshoeing, Cross-Country Skiing, etc.
+   + expand  (optional, string, `qualifiers`) ...Includes or excludes elements dynamically from payload.  Mutiple values can be added using commas.
+ 
+        + Values
+            + `qualifiers`
+            + `skus`
+            + `occurrences`
+            + `spots`
+            + `timeblocks`
+            + `rsvtntyps`
 
-    + Header
 
-            Accept: application/json
-            Key: Developer App Key provided by Dev Portal.
++ Model
+
+    + Headers
+
+            X-LLBean-current_requests_used: 1
+            X-LLBean-quota_expiration_time: 1395964800000
+            X-LLBean-requests_left_in_quota: 999
+            X-LLBean-spike_arrest_allowed_count: 10
+            X-LLBean-spike_arrest_exceed_count: 0
+            X-LLBean-spike_arrest_used_count: 1
+            X-LLBean-total_requests_allowed_to_account: 1000
 
     + Body
 
-             {
+            {
+              "properties": {
+                "name": "Monhegan Island Birding Hike",
+                "imageData": {
+                  "path": "//ecdiss.llbean.com/is/image/wim/",
+                  "dimensions": {
+                    "main": {
+                      "width": "428",
+                      "height": "494"
+                    },
+                    "thumbnail": {
+                      "width": "58",
+                      "height": "67"
+                    }
+                  },
+                  "images": [
+                    {
+                      "id": "279472_0_41",
+                      "defaultImage": true,
+                      "imageText": "main",
+                      "path": "//cdni.llbean.com/is/image/wim/279472_0_41"
+                    },
+                    {
+                      "id": "279472_0_44",
+                      "defaultImage": false,
+                      "imageText": "Additional View 1",
+                      "path": "//cdni.llbean.com/is/image/wim/279472_0_44"
+                    }
+                  ]
+                },
+                "seq": 0,
+                "priceRange": "$149.00",
+                "holdTimeLimit": 20,
+                "childParticipantRequiresAdult": true,
+                "waitListAvailable": true,
+                "eventLocations": [
+                  {
+                    "id": 3,
+                    "name": "Freeport Retail Store",
+                    "city": "Freeport",
+                    "state": "ME",
+                    "zipCode": "04032",
+                    "addressLine1": "95 Main St",
+                    "addressLine2": "",
+                    "isSelected": true,
+                    "latitudeText": "43.857949",
+                    "longitudeText": "-70.103322",
+                    "selectedOccurrenceIndex": -1
+                  }
+                ],
+                "metricPath": "Outdoor Discovery Schools:Bird Watching",
+                "metricDeptName": "Outdoor Discovery Schools",
+                "metricDeptId": 33,
+                "metricSubDeptName": "Bird Watching",
+                "metricSubDeptId": 513834,
+                "metricSub2DeptId": 0,
+                "metricSub3DeptId": 0,
+                "categoryId": "83652",
+                "catalogId": "TA",
+                "displayId": "279472",
+                "productId": "1365340"
+              },
+              "actions": {},
+              "class": [
+                "event"
+              ],
+              "links": [
+                {
+                  "rel": "self",
+                  "href": "https://api.llbean.com/v1/events/83652"
+                }
+              ]
+            }
+
+            + Schema
+
+            {
+              "type": "object",
+              "$schema": "http://json-schema.org/draft-03/schema",
+              "id": "http://api.llbean.com",
+              "required": false,
+              "properties": {
+                "actions": {
+                  "type": "object",
+                  "id": "http://api.llbean.com/actions",
+                  "required": false
+                },
+                "class": {
+                  "type": "array",
+                  "id": "http://api.llbean.com/class",
+                  "required": false,
+                  "items": {
+                    "type": "string",
+                    "id": "http://api.llbean.com/class/0",
+                    "required": false
+                  }
+                },
+                "links": {
+                  "type": "array",
+                  "id": "http://api.llbean.com/links",
+                  "required": false,
+                  "items": {
+                    "type": "object",
+                    "id": "http://api.llbean.com/links/0",
+                    "required": false,
+                    "properties": {
+                      "href": {
+                        "type": "string",
+                        "id": "http://api.llbean.com/links/0/href",
+                        "required": false
+                      },
+                      "rel": {
+                        "type": "string",
+                        "id": "http://api.llbean.com/links/0/rel",
+                        "required": false
+                      }
+                    }
+                  }
+                },
+                "properties": {
+                  "type": "object",
+                  "id": "http://api.llbean.com/properties",
+                  "required": false,
+                  "properties": {
+                    "catalogId": {
+                      "type": "string",
+                      "id": "http://api.llbean.com/properties/catalogId",
+                      "required": false
+                    },
+                    "categoryId": {
+                      "type": "string",
+                      "id": "http://api.llbean.com/properties/categoryId",
+                      "required": false
+                    },
+                    "childParticipantRequiresAdult": {
+                      "type": "boolean",
+                      "id": "http://api.llbean.com/properties/childParticipantRequiresAdult",
+                      "required": false
+                    },
+                    "displayId": {
+                      "type": "string",
+                      "id": "http://api.llbean.com/properties/displayId",
+                      "required": false
+                    },
+                    "eventLocations": {
+                      "type": "array",
+                      "id": "http://api.llbean.com/properties/eventLocations",
+                      "required": false,
+                      "items": {
+                        "type": "object",
+                        "id": "http://api.llbean.com/properties/eventLocations/0",
+                        "required": false,
+                        "properties": {
+                          "addressLine1": {
+                            "type": "string",
+                            "id": "http://api.llbean.com/properties/eventLocations/0/addressLine1",
+                            "required": false
+                          },
+                          "addressLine2": {
+                            "type": "string",
+                            "id": "http://api.llbean.com/properties/eventLocations/0/addressLine2",
+                            "required": false
+                          },
+                          "city": {
+                            "type": "string",
+                            "id": "http://api.llbean.com/properties/eventLocations/0/city",
+                            "required": false
+                          },
+                          "id": {
+                            "type": "number",
+                            "id": "http://api.llbean.com/properties/eventLocations/0/id",
+                            "required": false
+                          },
+                          "isSelected": {
+                            "type": "boolean",
+                            "id": "http://api.llbean.com/properties/eventLocations/0/isSelected",
+                            "required": false
+                          },
+                          "latitudeText": {
+                            "type": "string",
+                            "id": "http://api.llbean.com/properties/eventLocations/0/latitudeText",
+                            "required": false
+                          },
+                          "longitudeText": {
+                            "type": "string",
+                            "id": "http://api.llbean.com/properties/eventLocations/0/longitudeText",
+                            "required": false
+                          },
+                          "name": {
+                            "type": "string",
+                            "id": "http://api.llbean.com/properties/eventLocations/0/name",
+                            "required": false
+                          },
+                          "selectedOccurrenceIndex": {
+                            "type": "number",
+                            "id": "http://api.llbean.com/properties/eventLocations/0/selectedOccurrenceIndex",
+                            "required": false
+                          },
+                          "state": {
+                            "type": "string",
+                            "id": "http://api.llbean.com/properties/eventLocations/0/state",
+                            "required": false
+                          },
+                          "zipCode": {
+                            "type": "string",
+                            "id": "http://api.llbean.com/properties/eventLocations/0/zipCode",
+                            "required": false
+                          }
+                        }
+                      }
+                    },
+                    "holdTimeLimit": {
+                      "type": "number",
+                      "id": "http://api.llbean.com/properties/holdTimeLimit",
+                      "required": false
+                    },
+                    "imageData": {
+                      "type": "object",
+                      "id": "http://api.llbean.com/properties/imageData",
+                      "required": false,
+                      "properties": {
+                        "dimensions": {
+                          "type": "object",
+                          "id": "http://api.llbean.com/properties/imageData/dimensions",
+                          "required": false,
+                          "properties": {
+                            "main": {
+                              "type": "object",
+                              "id": "http://api.llbean.com/properties/imageData/dimensions/main",
+                              "required": false,
+                              "properties": {
+                                "height": {
+                                  "type": "string",
+                                  "id": "http://api.llbean.com/properties/imageData/dimensions/main/height",
+                                  "required": false
+                                },
+                                "width": {
+                                  "type": "string",
+                                  "id": "http://api.llbean.com/properties/imageData/dimensions/main/width",
+                                  "required": false
+                                }
+                              }
+                            },
+                            "thumbnail": {
+                              "type": "object",
+                              "id": "http://api.llbean.com/properties/imageData/dimensions/thumbnail",
+                              "required": false,
+                              "properties": {
+                                "height": {
+                                  "type": "string",
+                                  "id": "http://api.llbean.com/properties/imageData/dimensions/thumbnail/height",
+                                  "required": false
+                                },
+                                "width": {
+                                  "type": "string",
+                                  "id": "http://api.llbean.com/properties/imageData/dimensions/thumbnail/width",
+                                  "required": false
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "images": {
+                          "type": "array",
+                          "id": "http://api.llbean.com/properties/imageData/images",
+                          "required": false,
+                          "items": {
+                            "type": "object",
+                            "id": "http://api.llbean.com/properties/imageData/images/0",
+                            "required": false,
+                            "properties": {
+                              "defaultImage": {
+                                "type": "boolean",
+                                "id": "http://api.llbean.com/properties/imageData/images/0/defaultImage",
+                                "required": false
+                              },
+                              "id": {
+                                "type": "string",
+                                "id": "http://api.llbean.com/properties/imageData/images/0/id",
+                                "required": false
+                              },
+                              "imageText": {
+                                "type": "string",
+                                "id": "http://api.llbean.com/properties/imageData/images/0/imageText",
+                                "required": false
+                              },
+                              "path": {
+                                "type": "string",
+                                "id": "http://api.llbean.com/properties/imageData/images/0/path",
+                                "required": false
+                              }
+                            }
+                          }
+                        },
+                        "path": {
+                          "type": "string",
+                          "id": "http://api.llbean.com/properties/imageData/path",
+                          "required": false
+                        }
+                      }
+                    },
+                    "metricDeptId": {
+                      "type": "number",
+                      "id": "http://api.llbean.com/properties/metricDeptId",
+                      "required": false
+                    },
+                    "metricDeptName": {
+                      "type": "string",
+                      "id": "http://api.llbean.com/properties/metricDeptName",
+                      "required": false
+                    },
+                    "metricPath": {
+                      "type": "string",
+                      "id": "http://api.llbean.com/properties/metricPath",
+                      "required": false
+                    },
+                    "metricSub2DeptId": {
+                      "type": "number",
+                      "id": "http://api.llbean.com/properties/metricSub2DeptId",
+                      "required": false
+                    },
+                    "metricSub3DeptId": {
+                      "type": "number",
+                      "id": "http://api.llbean.com/properties/metricSub3DeptId",
+                      "required": false
+                    },
+                    "metricSubDeptId": {
+                      "type": "number",
+                      "id": "http://api.llbean.com/properties/metricSubDeptId",
+                      "required": false
+                    },
+                    "metricSubDeptName": {
+                      "type": "string",
+                      "id": "http://api.llbean.com/properties/metricSubDeptName",
+                      "required": false
+                    },
+                    "name": {
+                      "type": "string",
+                      "id": "http://api.llbean.com/properties/name",
+                      "required": false
+                    },
+                    "priceRange": {
+                      "type": "string",
+                      "id": "http://api.llbean.com/properties/priceRange",
+                      "required": false
+                    },
+                    "productId": {
+                      "type": "string",
+                      "id": "http://api.llbean.com/properties/productId",
+                      "required": false
+                    },
+                    "seq": {
+                      "type": "number",
+                      "id": "http://api.llbean.com/properties/seq",
+                      "required": false
+                    },
+                    "waitListAvailable": {
+                      "type": "boolean",
+                      "id": "http://api.llbean.com/properties/waitListAvailable",
+                      "required": false
+                    }
+                  }
+                }
+              }
+            }
+
+
+
+### Get ODS Event by Id [GET]
+Get info about the event occurance.
+
++ Request
+
+    + Headers
+
+            key: fjduskenfhysnfksh773n63n==
+
++ Response 200 (application/json)
+    
+    [Events Occurrence][]
+
++ Response 404 (application/json)
+
+    + Body
+
+            {
+              "fault": {
+                "detail": {
+                  "errorcode": "404",
+                  "href": "https://developer.llbean.com/errors/LLB-O404",
+                  "message": "Event ID not found"
+                },
+                "faultstring": "Event ID not found"
+              }
+            }
+
+
+## Events Search [/v1/events/search{?locationid,eventtypeid,eventlevelid,pricerangeid,startdate,deptid,startIndex,expand}]
+Represents the event occurrence search entity.
+
++ Parameters
+
+    + locationid (optional, string, `574`) ... Filter the results by the given locations where the event is held
+    + eventtypeid (optional, string, `2474,2441`) ...Filter the results by the given event type
+    + eventlevelid (optional, string, `2475,2443`) ...Filter the results by the given event level 
+    + pricerangeid (optional, string, `1,3`) ...Ids of price ranges to include.
+    + startdate (optional, string, `2/26/2014`) ...Start date to look for event occurrences. Defaults to current date.
+    + deptid (optional, string, `33`) ...The department id the event
+    + startIndex (optional, integer, `33`) ...Start index relative to total elements (note total element)
+    + expand  (optional, string, `refinements`) ...Includes or excludes elements dynamically from payload
+ 
+        + Values
+            + `refinements`
+
++ Model
+
+    + Headers
+
+            X-LLBean-current_requests_used: 1
+            X-LLBean-quota_expiration_time: 1395964800000
+            X-LLBean-requests_left_in_quota: 999
+            X-LLBean-spike_arrest_allowed_count: 10
+            X-LLBean-spike_arrest_exceed_count: 0
+            X-LLBean-spike_arrest_used_count: 1
+            X-LLBean-total_requests_allowed_to_account: 1000
+
+    + Body
+
+            {
               "properties": {
                 "startIndex": 1,
                 "endIndex": 50,
-                "total": 361,
+                "total": 158,
                 "categoryId": "33",
-                "persRefinementsSelected": {
-                  "STORE_CITY_STATE": [
-                    "0"
-                  ],
-                  "EVENT_TYPE": [
-                    "2438"
-                  ],
-                  "EVENT_LEVEL": [
-                    "0"
-                  ],
-                  "PRICE_RANGE": [
-                    "0"
-                  ],
-                  "fromDate": "2/13/2014",
-                  "categoryId": "33",
-                  "isRetail": false
-                },
-                "filterData": "{\"STORE_CITY_STATE\":[\"0\"],\"EVENT_TYPE\":[\"2438\"],\"EVENT_LEVEL\":[\"0\"],\"PRICE_RANGE\":[\"0\"],\"fromDate\":\"2/13/2014\",\"categoryId\":33,\"isRetail\":false}",
-                "dataLayerExecutionTime": 377,
-                "actionTime": 16,
-                "refinements": [
-                  {
-                    "key": "STORE_CITY_STATE",
-                    "value": "Events Near",
-                    "id": 1,
-                    "refinementValues": [
-                      {
-                        "key": "13",
-                        "value": "Albany, NY ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "16",
-                        "value": "Bangor, ME ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "11",
-                        "value": "Burlington, MA ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "12",
-                        "value": "Center Valley, PA ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "8",
-                        "value": "Concord, NH ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "28",
-                        "value": "Danbury, CT ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "19",
-                        "value": "Dedham, MA ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "6",
-                        "value": "Ellsworth, ME ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "29",
-                        "value": "Fayetteville, NY ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "27",
-                        "value": "Freehold, NJ ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "566",
-                        "value": "Freeport, ME ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "25",
-                        "value": "King Of Prussia, PA ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "30",
-                        "value": "North Hampton, NH ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "10",
-                        "value": "Manchester, NH ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "15",
-                        "value": "Mansfield, MA ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "2",
-                        "value": "Marlton, NJ ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "7",
-                        "value": "Nashua, NH ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "5",
-                        "value": "North Conway, NH ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "18",
-                        "value": "Orange, CT ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "26",
-                        "value": "Paramus, NJ ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "22",
-                        "value": "Pittsburgh, PA ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "24",
-                        "value": "Yonkers, NY ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "14",
-                        "value": "South Windsor, CT ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "20",
-                        "value": "Skokie, IL ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "21",
-                        "value": "South Barrington, IL ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "1",
-                        "value": "McLean, VA ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "23",
-                        "value": "Victor, NY ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "17",
-                        "value": "Wareham, MA ",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "9",
-                        "value": "West Lebanon, NH ",
-                        "isSelected": false
-                      }
-                    ]
-                  },
-                  {
-                    "key": "EVENT_TYPE",
-                    "value": "Event Type",
-                    "id": 2,
-                    "refinementValues": [
-                      {
-                        "key": "2474",
-                        "value": "Discovery Course",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "2436",
-                        "value": "Instructional Course",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "2438",
-                        "value": "Day Tour",
-                        "isSelected": true
-                      },
-                      {
-                        "key": "2437",
-                        "value": "Overnight Trip",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "2441",
-                        "value": "Private Lesson",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "2439",
-                        "value": "Instructor Certification Course",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "2440",
-                        "value": "Women's-Only Adventure",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "2600",
-                        "value": "Youth Camps",
-                        "isSelected": false
-                      }
-                    ]
-                  },
-                  {
-                    "key": "EVENT_LEVEL",
-                    "value": "Skill Level",
-                    "id": 3,
-                    "refinementValues": [
-                      {
-                        "key": "2475",
-                        "value": "Beginner",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "2074",
-                        "value": "Intermediate",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "2443",
-                        "value": "Advanced",
-                        "isSelected": false
-                      }
-                    ]
-                  },
-                  {
-                    "key": "PRICE_RANGE",
-                    "value": "Price",
-                    "id": 4,
-                    "refinementValues": [
-                      {
-                        "key": "1",
-                        "value": "$0 to $30",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "2",
-                        "value": "$30 to $50",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "3",
-                        "value": "$50 to $100",
-                        "isSelected": false
-                      },
-                      {
-                        "key": "4",
-                        "value": "$100+",
-                        "isSelected": false
-                      }
-                    ]
-                  }
-                ],
+                "filterData": "{\"STORE_CITY_STATE\":[\"524\"],\"EVENT_TYPE\":[\"0\"],\"EVENT_LEVEL\":[\"0\"],\"PRICE_RANGE\":[\"0\"],\"fromDate\":\"2/26/2014\",\"categoryId\":\"33\",\"isRetail\":false}",
+                "dataLayerExecutionTime": 449,
+                "actionTime": 66,
                 "eventOccurrenceGroups": [
                   {
                     "monthYear": "February, 2014",
                     "isEventScheduled": true,
                     "eventOccurrences": [
                       {
-                        "eventId": "83684",
-                        "locationId": 482,
+                        "eventId": "83613",
+                        "locationId": 524,
                         "timeBlocks": [
                           {
-                            "start": "Feb 14, 2014 6:00:00 PM EST",
-                            "end": "Feb 14, 2014 9:00:00 PM EST"
+                            "start": "Feb 26, 2014 8:00:00 AM EST",
+                            "end": "Feb 26, 2014 12:00:00 PM EST"
+                          },
+                          {
+                            "start": "Feb 27, 2014 12:00:00 PM EST",
+                            "end": "Feb 27, 2014 3:00:00 PM EST"
                           }
                         ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Albany, NY",
-                        "price": "$40",
+                        "name": "Intermediate Shotgun Sports Course",
+                        "location": "Freeport, ME",
+                        "price": "$245",
                         "status": "This event occurs in the past",
-                        "isMultiDay": false,
+                        "isMultiDay": true,
                         "isViewTimes": false,
                         "sameDayEventOccurrences": [],
                         "links": [
                           {
                             "rel": "self",
-                            "href": "/v1/events/83684"
+                            "href": "https://dev.api.llbean.com/v1/events/83613"
                           }
                         ],
-                        "occurrenceId": "35421",
+                        "occurrenceId": "4807",
                         "class": [
                           "event"
                         ]
                       },
                       {
-                        "eventId": "83684",
-                        "locationId": 491,
+                        "eventId": "83628",
+                        "locationId": 3,
                         "timeBlocks": [
                           {
-                            "start": "Feb 14, 2014 6:00:00 PM EST",
-                            "end": "Feb 14, 2014 9:00:00 PM EST"
+                            "start": "Feb 26, 2014 9:00:00 AM EST",
+                            "end": "Feb 26, 2014 5:00:00 PM EST"
+                          },
+                          {
+                            "start": "Mar 5, 2014 8:00:00 AM EST",
+                            "end": "Mar 5, 2014 4:00:00 PM EST"
+                          },
+                          {
+                            "start": "Mar 10, 2014 10:00:00 AM EDT",
+                            "end": "Mar 10, 2014 10:00:00 AM EDT"
                           }
                         ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Victor, NY",
-                        "price": "$40",
+                        "name": "Winter Sampler",
+                        "location": "Freeport, ME",
+                        "price": "$559 to $599",
                         "status": "This event occurs in the past",
-                        "isMultiDay": false,
+                        "isMultiDay": true,
                         "isViewTimes": false,
                         "sameDayEventOccurrences": [],
                         "links": [
                           {
                             "rel": "self",
-                            "href": "/v1/events/83684"
+                            "href": "https://dev.api.llbean.com/v1/events/83628"
                           }
                         ],
-                        "occurrenceId": "35445",
+                        "occurrenceId": "4796",
                         "class": [
                           "event"
                         ]
                       },
                       {
-                        "eventId": "83684",
-                        "locationId": 505,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 14, 2014 6:00:00 PM EST",
-                            "end": "Feb 14, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "South Barrington, IL",
-                        "price": "$40",
-                        "status": "This event occurs in the past",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35437",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 510,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 14, 2014 6:00:00 PM EST",
-                            "end": "Feb 14, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Enfield, NH",
-                        "price": "$40",
-                        "status": "This event occurs in the past",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35466",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
+                        "eventId": "83611",
                         "locationId": 515,
                         "timeBlocks": [
                           {
-                            "start": "Feb 14, 2014 6:00:00 PM EST",
-                            "end": "Feb 14, 2014 9:00:00 PM EST"
+                            "start": "Feb 27, 2014 12:00:00 AM EST",
+                            "end": "Feb 27, 2014 3:00:00 AM EST"
+                          }
+                        ],
+                        "name": "Women's-Only Introduction to Shotgun Sports Course",
+                        "location": "Freeport, ME",
+                        "price": "$129",
+                        "status": "Event Cancelled",
+                        "isMultiDay": false,
+                        "isViewTimes": false,
+                        "sameDayEventOccurrences": [],
+                        "links": [
+                          {
+                            "rel": "self",
+                            "href": "https://dev.api.llbean.com/v1/events/83611"
+                          }
+                        ],
+                        "occurrenceId": "4097",
+                        "class": [
+                          "event"
+                        ]
+                      },
+                      {
+                        "eventId": "83671",
+                        "locationId": 515,
+                        "timeBlocks": [
+                          {
+                            "start": "Feb 27, 2014 8:00:00 AM EST",
+                            "end": "Feb 27, 2014 11:00:00 AM EST"
+                          }
+                        ],
+                        "name": "Private Sporting-Clays Lesson",
+                        "location": "Freeport, ME",
+                        "price": "$165 to $248",
+                        "status": "This event occurs in the past",
+                        "isMultiDay": false,
+                        "isViewTimes": false,
+                        "sameDayEventOccurrences": [],
+                        "links": [
+                          {
+                            "rel": "self",
+                            "href": "https://dev.api.llbean.com/v1/events/83671"
+                          }
+                        ],
+                        "occurrenceId": "4547",
+                        "class": [
+                          "event"
+                        ]
+                      },
+                      {
+                        "eventId": "83684",
+                        "locationId": 3,
+                        "timeBlocks": [
+                          {
+                            "start": "Feb 28, 2014 6:00:00 PM EST",
+                            "end": "Feb 28, 2014 9:00:00 PM EST"
                           }
                         ],
                         "name": "Starlight Snowshoe Tour",
@@ -490,1243 +747,10 @@ The following example eepresents the event occurrence search entity.
                         "links": [
                           {
                             "rel": "self",
-                            "href": "/v1/events/83684"
+                            "href": "https://dev.api.llbean.com/v1/events/83684"
                           }
                         ],
-                        "occurrenceId": "35410",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 562,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 14, 2014 6:00:00 PM EST",
-                            "end": "Feb 14, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Cazenovia, NY",
-                        "price": "$40",
-                        "status": "This event occurs in the past",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35457",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 564,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 14, 2014 6:00:00 PM EST",
-                            "end": "Feb 14, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Allison Park, PA",
-                        "price": "$40",
-                        "status": "This event occurs in the past",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35429",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 482,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 21, 2014 6:00:00 PM EST",
-                            "end": "Feb 21, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Albany, NY",
-                        "price": "$40",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35422",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 491,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 21, 2014 6:00:00 PM EST",
-                            "end": "Feb 21, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Victor, NY",
-                        "price": "$40",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35446",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 505,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 21, 2014 6:00:00 PM EST",
-                            "end": "Feb 21, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "South Barrington, IL",
-                        "price": "$40",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35438",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 510,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 21, 2014 6:00:00 PM EST",
-                            "end": "Feb 21, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Enfield, NH",
-                        "price": "$40",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35467",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 515,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 21, 2014 6:00:00 PM EST",
-                            "end": "Feb 21, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Freeport, ME",
-                        "price": "$40",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35411",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 562,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 21, 2014 6:00:00 PM EST",
-                            "end": "Feb 21, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Cazenovia, NY",
-                        "price": "$40",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35455",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 564,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 21, 2014 6:00:00 PM EST",
-                            "end": "Feb 21, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Allison Park, PA",
-                        "price": "$40",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35430",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83591",
-                        "locationId": 550,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 22, 2014 10:00:00 AM EST",
-                            "end": "Feb 22, 2014 3:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Pleasant Mountain Guided Snowshoe Hike",
-                        "location": "Bridgton, ME",
-                        "price": "$79",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83591"
-                          }
-                        ],
-                        "occurrenceId": "35527",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 482,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 28, 2014 6:00:00 PM EST",
-                            "end": "Feb 28, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Albany, NY",
-                        "price": "$40",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35423",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 491,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 28, 2014 6:00:00 PM EST",
-                            "end": "Feb 28, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Victor, NY",
-                        "price": "$40",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35447",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 505,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 28, 2014 6:00:00 PM EST",
-                            "end": "Feb 28, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "South Barrington, IL",
-                        "price": "$40",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35439",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 510,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 28, 2014 6:00:00 PM EST",
-                            "end": "Feb 28, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Enfield, NH",
-                        "price": "$40",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35468",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 515,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 28, 2014 6:00:00 PM EST",
-                            "end": "Feb 28, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Freeport, ME",
-                        "price": "$40",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35412",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 562,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 28, 2014 6:00:00 PM EST",
-                            "end": "Feb 28, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Cazenovia, NY",
-                        "price": "$40",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35456",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83684",
-                        "locationId": 564,
-                        "timeBlocks": [
-                          {
-                            "start": "Feb 28, 2014 6:00:00 PM EST",
-                            "end": "Feb 28, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Allison Park, PA",
-                        "price": "$40",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35431",
-                        "class": [
-                          "event"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "monthYear": "March, 2014",
-                    "isEventScheduled": true,
-                    "eventOccurrences": [
-                      {
-                        "eventId": "83684",
-                        "locationId": 515,
-                        "timeBlocks": [
-                          {
-                            "start": "Mar 7, 2014 6:00:00 PM EST",
-                            "end": "Mar 7, 2014 9:00:00 PM EST"
-                          }
-                        ],
-                        "name": "Starlight Snowshoe Tour",
-                        "location": "Freeport, ME",
-                        "price": "$40",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83684"
-                          }
-                        ],
-                        "occurrenceId": "35413",
-                        "class": [
-                          "event"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "monthYear": "May, 2014",
-                    "isEventScheduled": true,
-                    "eventOccurrences": [
-                      {
-                        "eventId": "83652",
-                        "locationId": 547,
-                        "timeBlocks": [
-                          {
-                            "start": "May 18, 2014 8:00:00 AM EDT",
-                            "end": "May 18, 2014 4:30:00 PM EDT"
-                          }
-                        ],
-                        "name": "Monhegan Island Birding Hike",
-                        "location": "New Harbor, ME",
-                        "price": "$149",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83652"
-                          }
-                        ],
-                        "occurrenceId": "36600",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83637",
-                        "locationId": 506,
-                        "timeBlocks": [
-                          {
-                            "start": "May 23, 2014 5:30:00 PM EDT",
-                            "end": "May 23, 2014 8:30:00 PM EDT"
-                          }
-                        ],
-                        "name": "Sunset Kayak Tour",
-                        "location": "Marlborough, CT",
-                        "price": "$49",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83637"
-                          }
-                        ],
-                        "occurrenceId": "36064",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "May 24, 2014 7:00:00 AM EDT",
-                            "end": "May 24, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36702",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "May 25, 2014 7:00:00 AM EDT",
-                            "end": "May 25, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36703",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "May 26, 2014 7:00:00 AM EDT",
-                            "end": "May 26, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36704",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "May 27, 2014 7:00:00 AM EDT",
-                            "end": "May 27, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36705",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "May 28, 2014 7:00:00 AM EDT",
-                            "end": "May 28, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36706",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "May 29, 2014 7:00:00 AM EDT",
-                            "end": "May 29, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36707",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "May 30, 2014 7:00:00 AM EDT",
-                            "end": "May 30, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36708",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "May 31, 2014 7:00:00 AM EDT",
-                            "end": "May 31, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36709",
-                        "class": [
-                          "event"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "monthYear": "June, 2014",
-                    "isEventScheduled": true,
-                    "eventOccurrences": [
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 1, 2014 7:00:00 AM EDT",
-                            "end": "Jun 1, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36710",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 2, 2014 7:00:00 AM EDT",
-                            "end": "Jun 2, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36711",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 3, 2014 7:00:00 AM EDT",
-                            "end": "Jun 3, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36712",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 4, 2014 7:00:00 AM EDT",
-                            "end": "Jun 4, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36713",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 5, 2014 7:00:00 AM EDT",
-                            "end": "Jun 5, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36714",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 6, 2014 7:00:00 AM EDT",
-                            "end": "Jun 6, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36715",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 7, 2014 7:00:00 AM EDT",
-                            "end": "Jun 7, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36716",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83642",
-                        "locationId": 526,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 7, 2014 9:00:00 AM EDT",
-                            "end": "Jun 7, 2014 1:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Maine Guided Wildlife Tour, Tandem Kayak",
-                        "location": "Freeport, ME",
-                        "price": "$69",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83642"
-                          }
-                        ],
-                        "occurrenceId": "36633",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 8, 2014 7:00:00 AM EDT",
-                            "end": "Jun 8, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36717",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83642",
-                        "locationId": 526,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 8, 2014 9:00:00 AM EDT",
-                            "end": "Jun 8, 2014 1:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Maine Guided Wildlife Tour, Tandem Kayak",
-                        "location": "Freeport, ME",
-                        "price": "$69",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83642"
-                          }
-                        ],
-                        "occurrenceId": "36634",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 9, 2014 7:00:00 AM EDT",
-                            "end": "Jun 9, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36718",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 10, 2014 7:00:00 AM EDT",
-                            "end": "Jun 10, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36719",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 11, 2014 7:00:00 AM EDT",
-                            "end": "Jun 11, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36720",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83656",
-                        "locationId": 513,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 12, 2014 7:00:00 AM EDT",
-                            "end": "Jun 12, 2014 3:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Androscoggin River Fishing Trip",
-                        "location": "Lisbon Falls, ME",
-                        "price": "$595",
-                        "status": "1 spot remaining",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83656"
-                          }
-                        ],
-                        "occurrenceId": "36721",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83634",
-                        "locationId": 12,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 12, 2014 7:00:00 PM EDT",
-                            "end": "Jun 12, 2014 10:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Full-Moon Kayak Tour",
-                        "location": "Center Valley, PA",
-                        "price": "$49",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83634"
-                          }
-                        ],
-                        "occurrenceId": "35910",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83634",
-                        "locationId": 481,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 12, 2014 7:00:00 PM EDT",
-                            "end": "Jun 12, 2014 10:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Full-Moon Kayak Tour",
-                        "location": "Albany, NY",
-                        "price": "$49",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83634"
-                          }
-                        ],
-                        "occurrenceId": "35892",
-                        "class": [
-                          "event"
-                        ]
-                      },
-                      {
-                        "eventId": "83634",
-                        "locationId": 487,
-                        "timeBlocks": [
-                          {
-                            "start": "Jun 12, 2014 7:00:00 PM EDT",
-                            "end": "Jun 12, 2014 10:00:00 PM EDT"
-                          }
-                        ],
-                        "name": "Full-Moon Kayak Tour",
-                        "location": "Danbury, CT",
-                        "price": "$49",
-                        "status": "Open",
-                        "isMultiDay": false,
-                        "isViewTimes": false,
-                        "sameDayEventOccurrences": [],
-                        "links": [
-                          {
-                            "rel": "self",
-                            "href": "/v1/events/83634"
-                          }
-                        ],
-                        "occurrenceId": "35929",
+                        "occurrenceId": "2996",
                         "class": [
                           "event"
                         ]
@@ -1741,28 +765,28 @@ The following example eepresents the event occurrence search entity.
               "links": [
                 {
                   "rel": "self",
-                  "href": "/v1/events/search?_TODO_REQUIRES_PARSING_DATA_FROM_REQUEST_PARAMETERS_TO_MEET_EVENT_OCCURRENCES_URL_SPEC e.g. /v1/events/search?locationid={locationid}&eventtypeid={eventtypeid}&eventlevelid={eventlevelid}&pricerangeid={pricerangeid}&startdate={startdate}&deptid={deptid}"
+                  "href": "/v1/events/search?locationid=524&eventtypeid=null&eventlevelid=null&pricerangeid=null&startdate=2/26/2014&deptid=33&startIndex=1"
                 },
                 {
                   "rel": "next",
-                  "href": "/v1/events/search?_TODO_NEXT_BATCH_OF_ELEMENTS_START_END_INDEX_SEE_showMoreURL e.g. /v1/events/search?locationid={locationid}&eventtypeid={eventtypeid}&eventlevelid={eventlevelid}&pricerangeid={pricerangeid}&startdate={startdate}&deptid={deptid}"
+                  "href": "https://dev.api.llbean.com/v1/events/search?startIndex=51&locationid=524&startdate=2/26/2014&deptid=33"
                 }
               ]
             }
 
-## Event Occurrences not found [/v1/events/search?locationid=123]
-The following example represents the event occurrence search at a location where no events are currently being held.
+### Find Events Occurrences By Filter Criteria [GET]
+Get info about the rain.
++ Request
 
-+ Parameters
-    + locationid (string, `123`) ... The invalid location id
+    + Headers
 
-### 404 - Event Occurrences not found [GET]
-+ Response 404 (application/json)
+            key: fjduskenfhysnfksh773n63n==
 
-    + Header
++ Response 200
 
-            Accept: application/json
-            Key: Developer App Key provided by Dev Portal.
+    [Events Search][]
+
++ Response 404
 
     + Body
 
@@ -1781,4 +805,40 @@ The following example represents the event occurrence search at a location where
                 }
               }
             }
+
++ Response 500
+
+    + Body
+
+            {
+              "fault": {
+                "detail": {
+                  "errorcode": "500",
+                  "href": "https://developer.llbean.com/errors/LLB-O400",
+                  "message": "Event Occurrences not found.",
+                  "details": {
+                    "errorMessage": {
+                      "PERS_NOT_AVAILABLE": "We're sorry, we are experiencing technical problems with our reservation system. Please try again later or call 1-888-270-2326 to complete your reservation."
+                    }
+                  },
+                  "faultstring": "An exception happen during search"
+                }
+              }
+            }
+
++ Response 400
+
+    + Body
+
+            {
+              "fault": {
+                "detail": {
+                  "errorcode": "404",
+                  "href": "https://developer.llbean.com/errors/LLB-404",
+                  "message": "Invalid Pagination Parameters."
+                },
+                "faultstring": "Invalid Pagination Parameters"
+              }
+            }
+
 
